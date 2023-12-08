@@ -15,7 +15,6 @@ import com.example.myapp.core.TAG
 import com.example.myapp.todo.data.Item
 import com.example.myapp.todo.data.ItemRepository
 import kotlinx.coroutines.launch
-import java.time.LocalDate
 
 data class ItemUiState(
     val itemId: String? = null,
@@ -58,12 +57,12 @@ class ItemViewModel(private val itemId: String?, private val itemRepository: Ite
     }
 
 
-    fun saveOrUpdateItem(managerName: String, index: Int, autumnTreatment: Boolean, dateCreated: String) {
+    fun saveOrUpdateItem(title: String, value: Int, forSale: Boolean, date: String) {
         viewModelScope.launch {
             Log.d(TAG, "saveOrUpdateItem...");
             try {
                 uiState = uiState.copy(submitResult = Result.Loading)
-                val item = uiState.item.copy(managerName = managerName, autumnTreatment = autumnTreatment, index = index, dateCreated = dateCreated)
+                val item = uiState.item.copy(title = title, forSale = forSale, value = value, date = date)
                 val savedItem: Item;
                 if (itemId == null) {
                     savedItem = itemRepository.save(item)

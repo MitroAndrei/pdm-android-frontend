@@ -94,7 +94,7 @@ class ItemRepository(private val itemService: ItemService, private val itemWsCli
     suspend fun save(item: Item): Item {
         Log.d(TAG, "save $item...")
         val createdItem = itemService.create(item = item, authorization = getBearerToken())
-        Log.d(TAG, "save $item succeeded")
+        Log.d(TAG, "save $createdItem succeeded")
         //handleItemCreated(createdItem)
         return createdItem
     }

@@ -70,6 +70,11 @@ dependencies {
     implementation("androidx.compose.ui:ui-graphics")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation("androidx.compose.material3:material3")
+//    runtimeOnly("androidx.compose.material:material:1.5.3")
+// https://mvnrepository.com/artifact/androidx.compose.material3/material3
+    runtimeOnly("androidx.compose.material3:material3:1.2.0-alpha11")
+
+
     // Retrofit
     implementation("com.squareup.retrofit2:retrofit:2.9.0")
     implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.0")

@@ -1,7 +1,6 @@
 package com.example.myapp.todo.ui.items
 
 import android.util.Log
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -38,19 +37,19 @@ fun ItemDetail(item: Item, onItemClick: OnItemFn) {
 //    Log.d("ItemDetail", "recompose id = ${item.id}")
     Row {
 
-        ClickableText(text = AnnotatedString(item.index.toString()),
+        ClickableText(text = AnnotatedString(item.value.toString()),
             style = TextStyle(
                 fontSize = 24.sp,
             ), onClick = { onItemClick(item._id) }
         )
         Text(text = "  ")
-        ClickableText(text = AnnotatedString(item.managerName),
+        ClickableText(text = AnnotatedString(item.title),
             style = TextStyle(
                 fontSize = 24.sp,
             ), onClick = { onItemClick(item._id) }
         )
         Text(text = "  ")
-        ClickableText(text = AnnotatedString(item.autumnTreatment.toString()),
+        ClickableText(text = AnnotatedString(item.forSale.toString()),
             style = TextStyle(
                 fontSize = 24.sp,
             ), onClick = { onItemClick(item._id) }
