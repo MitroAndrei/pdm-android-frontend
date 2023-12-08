@@ -26,14 +26,14 @@ class MainActivity : ComponentActivity() {
     override fun onResume() {
         super.onResume()
         lifecycleScope.launch {
-            (application as MyApplication).container.itemRepository.openWsClient()
+            (application as MyApplication).container.paintingRepository.openWsClient()
         }
     }
 
     override fun onPause() {
         super.onPause()
         lifecycleScope.launch {
-            (application as MyApplication).container.itemRepository.closeWsClient()
+            (application as MyApplication).container.paintingRepository.closeWsClient()
         }
     }
 }

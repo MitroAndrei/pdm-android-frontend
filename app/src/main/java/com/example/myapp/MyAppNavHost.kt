@@ -15,16 +15,16 @@ import com.example.myapp.auth.LoginScreen
 import com.example.myapp.core.data.UserPreferences
 import com.example.myapp.core.data.remote.Api
 import com.example.myapp.core.ui.UserPreferencesViewModel
-import com.example.myapp.todo.ui.ItemScreen
-import com.example.myapp.todo.ui.items.ItemsScreen
+import com.example.myapp.painting_manager.ui.PaintingScreen
+import com.example.myapp.painting_manager.ui.paintings.PaintingsScreen
 
-val itemsRoute = "items"
+val paintingsRoute = "paintings"
 val authRoute = "auth"
 
 @Composable
 fun MyAppNavHost() {
     val navController = rememberNavController()
-    val onCloseItem = {
+    val onClosePainting = {
         Log.d("MyAppNavHost", "navigate back to list")
         navController.popBackStack()
     }
@@ -38,15 +38,15 @@ fun MyAppNavHost() {
         navController = navController,
         startDestination = authRoute
     ) {
-        composable(itemsRoute) {
-            ItemsScreen(
-                onItemClick = { itemId ->
-                    Log.d("MyAppNavHost", "navigate to item $itemId")
-                    navController.navigate("$itemsRoute/$itemId")
+        composable(paintingsRoute) {
+            PaintingsScreen(
+                onPaintingClick = { paintingId ->
+                    Log.d("MyAppNavHost", "navigate to painting $paintingId")
+                    navController.navigate("$paintingsRoute/$paintingId")
                 },
-                onAddItem = {
-                    Log.d("MyAppNavHost", "navigate to new item")
-                    navController.navigate("$itemsRoute-new")
+                onAddPainting = {
+                    Log.d("MyAppNavHost", "navigate to new painting")
+                    navController.navigate("$paintingsRoute-new")
                 },
                 onLogout = {
                     Log.d("MyAppNavHost", "logout")
@@ -58,20 +58,20 @@ fun MyAppNavHost() {
                 })
         }
         composable(
-            route = "$itemsRoute/{id}",
+            route = "$paintingsRoute/{id}",
             arguments = listOf(navArgument("id") { type = NavType.StringType })
         )
         {
-            ItemScreen(
-                itemId = it.arguments?.getString("id"),
-                onClose = { onCloseItem() }
+            PaintingScreen(
+                paintingId = it.arguments?.getString("id"),
+                onClose = { onClosePainting() }
             )
         }
-        composable(route = "$itemsRoute-new")
+        composable(route = "$paintingsRoute-new")
         {
-            ItemScreen(
-                itemId = null,
-                onClose = { onCloseItem() }
+            PaintingScreen(
+                paintingId = null,
+                onClose = { onClosePainting() }
             )
         }
         composable(route = authRoute)
@@ -79,17 +79,17 @@ fun MyAppNavHost() {
             LoginScreen(
                 onClose = {
                     Log.d("MyAppNavHost", "navigate to list")
-                    navController.navigate(itemsRoute)
+                    navController.navigate(paintingsRoute)
                 }
             )
         }
     }
     LaunchedEffect(userPreferencesUiState.token) {
         if (userPreferencesUiState.token.isNotEmpty()) {
-            Log.d("MyAppNavHost", "Lauched effect navigate to items")
+            Log.d("MyAppNavHost", "Lauched effect navigate to paintings")
             Api.tokenInterceptor.token = userPreferencesUiState.token
             myAppViewModel.setToken(userPreferencesUiState.token)
-            navController.navigate(itemsRoute) {
+            navController.navigate(paintingsRoute) {
                 popUpTo(0)
             }
         }

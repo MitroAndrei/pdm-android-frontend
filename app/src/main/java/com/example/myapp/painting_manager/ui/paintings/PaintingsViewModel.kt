@@ -1,4 +1,4 @@
-package com.example.myapp.todo.ui.items
+package com.example.myapp.painting_manager.ui.paintings
 
 import android.util.Log
 import androidx.lifecycle.ViewModel
@@ -9,15 +9,15 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.myapp.MyApplication
 import com.example.myapp.core.Result
 import com.example.myapp.core.TAG
-import com.example.myapp.todo.data.Item
-import com.example.myapp.todo.data.ItemRepository
+import com.example.myapp.painting_manager.data.Painting
+import com.example.myapp.painting_manager.data.PaintingRepository
 import kotlinx.coroutines.flow.SharingStarted.Companion.WhileSubscribed
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class ItemsViewModel(private val itemRepository: ItemRepository) : ViewModel() {
-    val uiState: StateFlow<Result<List<Item>>> = itemRepository.itemStream.stateIn(
+class PaintingsViewModel(private val paintingRepository: PaintingRepository) : ViewModel() {
+    val uiState: StateFlow<Result<List<Painting>>> = paintingRepository.paintingStream.stateIn(
         scope = viewModelScope,
         started = WhileSubscribed(),
         initialValue = Result.Loading
@@ -26,13 +26,13 @@ class ItemsViewModel(private val itemRepository: ItemRepository) : ViewModel() {
 
     init {
         Log.d(TAG, "init")
-        loadItems()
+        loadPaintings()
     }
 
-    fun loadItems() {
-        Log.d(TAG, "loadItems...")
+    fun loadPaintings() {
+        Log.d(TAG, "loadPaintings...")
         viewModelScope.launch {
-            itemRepository.refresh()
+            paintingRepository.refresh()
         }
     }
 
@@ -41,7 +41,7 @@ class ItemsViewModel(private val itemRepository: ItemRepository) : ViewModel() {
             initializer {
                 val app =
                     (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MyApplication)
-                ItemsViewModel(app.container.itemRepository)
+                PaintingsViewModel(app.container.paintingRepository)
             }
         }
     }

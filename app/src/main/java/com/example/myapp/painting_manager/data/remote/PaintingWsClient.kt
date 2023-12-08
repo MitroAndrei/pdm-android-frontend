@@ -1,4 +1,4 @@
-package com.example.myapp.todo.data.remote
+package com.example.myapp.painting_manager.data.remote
 
 import android.util.Log
 import com.example.myapp.core.TAG
@@ -14,12 +14,12 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import okio.ByteString
 
-class ItemWsClient(private val okHttpClient: OkHttpClient) {
+class PaintingWsClient(private val okHttpClient: OkHttpClient) {
 
     lateinit var webSocket: WebSocket
 
     suspend fun openSocket(
-        onEvent: (itemEvent: ItemEvent?) -> Unit,
+        onEvent: (paintingEvent: PaintingEvent?) -> Unit,
         onClosed: () -> Unit,
         onFailure: () -> Unit
     ) {
@@ -28,7 +28,7 @@ class ItemWsClient(private val okHttpClient: OkHttpClient) {
             val request = Request.Builder().url(Api.wsUrl).build()
             webSocket = okHttpClient.newWebSocket(
                 request,
-                ItemWebSocketListener(onEvent = onEvent, onClosed = onClosed, onFailure = onFailure)
+                PaintingWebSocketListener(onEvent = onEvent, onClosed = onClosed, onFailure = onFailure)
             )
             okHttpClient.dispatcher.executorService.shutdown()
         }
@@ -39,14 +39,14 @@ class ItemWsClient(private val okHttpClient: OkHttpClient) {
         webSocket.close(1000, "");
     }
 
-    inner class ItemWebSocketListener(
-        private val onEvent: (itemEvent: ItemEvent?) -> Unit,
+    inner class PaintingWebSocketListener(
+        private val onEvent: (paintingEvent: PaintingEvent?) -> Unit,
         private val onClosed: () -> Unit,
         private val onFailure: () -> Unit
     ) : WebSocketListener() {
         private val moshi = Moshi.Builder().build()
-        private val itemEventJsonAdapter: JsonAdapter<ItemEvent> =
-            moshi.adapter(ItemEvent::class.java)
+        private val paintingEventJsonAdapter: JsonAdapter<PaintingEvent> =
+            moshi.adapter(PaintingEvent::class.java)
 
         override fun onOpen(webSocket: WebSocket, response: Response) {
             Log.d(TAG, "onOpen")
@@ -54,8 +54,8 @@ class ItemWsClient(private val okHttpClient: OkHttpClient) {
 
         override fun onMessage(webSocket: WebSocket, text: String) {
             Log.d(TAG, "onMessage string $text")
-            val itemEvent = itemEventJsonAdapter.fromJson(text)
-            onEvent(itemEvent)
+            val paintingEvent = paintingEventJsonAdapter.fromJson(text)
+            onEvent(paintingEvent)
         }
 
         override fun onMessage(webSocket: WebSocket, bytes: ByteString) {

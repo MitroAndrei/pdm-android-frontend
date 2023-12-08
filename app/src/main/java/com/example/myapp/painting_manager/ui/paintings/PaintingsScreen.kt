@@ -1,4 +1,4 @@
-package com.example.myapp.todo.ui.items
+package com.example.myapp.painting_manager.ui.paintings
 
 import android.util.Log
 import androidx.compose.foundation.layout.padding
@@ -21,18 +21,18 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapp.R
 import com.example.myapp.core.Result
-import com.example.myapp.todo.data.Item
+import com.example.myapp.painting_manager.data.Painting
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemsScreen(onItemClick: (id: String?) -> Unit, onAddItem: () -> Unit, onLogout: () -> Unit) {
-    Log.d("ItemsScreen", "recompose")
-    val itemsViewModel = viewModel<ItemsViewModel>(factory = ItemsViewModel.Factory)
-    val itemsUiState by itemsViewModel.uiState.collectAsStateWithLifecycle()
+fun PaintingsScreen(onPaintingClick: (id: String?) -> Unit, onAddPainting: () -> Unit, onLogout: () -> Unit) {
+    Log.d("PaintingsScreen", "recompose")
+    val paintingsViewModel = viewModel<PaintingsViewModel>(factory = PaintingsViewModel.Factory)
+    val paintingsUiState by paintingsViewModel.uiState.collectAsStateWithLifecycle()
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.items)) },
+                title = { Text(text = stringResource(id = R.string.paintings)) },
                 actions = {
                     Button(onClick = onLogout) { Text("Logout") }
                 }
@@ -41,23 +41,23 @@ fun ItemsScreen(onItemClick: (id: String?) -> Unit, onAddItem: () -> Unit, onLog
         floatingActionButton = {
             FloatingActionButton(
                 onClick = {
-                    Log.d("ItemsScreen", "add")
-                    onAddItem()
+                    Log.d("PaintingsScreen", "add")
+                    onAddPainting()
                 },
             ) { Icon(Icons.Rounded.Add, "Add") }
         }
     ) {
-        when (itemsUiState) {
+        when (paintingsUiState) {
             is Result.Success ->
-                ItemList(
-                    itemList = (itemsUiState as Result.Success<List<Item>>).data,
-                    onItemClick = onItemClick,
+                PaintingList(
+                    paintingList = (paintingsUiState as Result.Success<List<Painting>>).data,
+                    onPaintingClick = onPaintingClick,
                     modifier = Modifier.padding(it)
                 )
 
             is Result.Loading -> CircularProgressIndicator(modifier = Modifier.padding(it))
             is Result.Error -> Text(
-                text = "Failed to load items - ${(itemsUiState as Result.Error).exception?.message}",
+                text = "Failed to load paintings - ${(paintingsUiState as Result.Error).exception?.message}",
                 modifier = Modifier.padding(it)
             )
         }
@@ -66,6 +66,6 @@ fun ItemsScreen(onItemClick: (id: String?) -> Unit, onAddItem: () -> Unit, onLog
 
 @Preview
 @Composable
-fun PreviewItemsScreen() {
-    ItemsScreen(onItemClick = {}, onAddItem = {}, onLogout = {})
+fun PreviewPaintingsScreen() {
+    PaintingsScreen(onPaintingClick = {}, onAddPainting = {}, onLogout = {})
 }

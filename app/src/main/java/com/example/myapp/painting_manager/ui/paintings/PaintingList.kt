@@ -1,4 +1,4 @@
-package com.example.myapp.todo.ui.items
+package com.example.myapp.painting_manager.ui.paintings
 
 import android.util.Log
 import androidx.compose.foundation.layout.Row
@@ -14,45 +14,45 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.myapp.todo.data.Item
+import com.example.myapp.painting_manager.data.Painting
 
-typealias OnItemFn = (id: String?) -> Unit
+typealias OnPaintingFn = (id: String?) -> Unit
 
 @Composable
-fun ItemList(itemList: List<Item>, onItemClick: OnItemFn, modifier: Modifier) {
-    Log.d("ItemList", "recompose")
+fun PaintingList(paintingList: List<Painting>, onPaintingClick: OnPaintingFn, modifier: Modifier) {
+    Log.d("PaintingList", "recompose")
     LazyColumn(
         modifier = modifier
             .fillMaxSize()
             .padding(12.dp)
     ) {
-        items(itemList) { item ->
-            ItemDetail(item, onItemClick)
+        items(paintingList) { painting ->
+            PaintingDetail(painting, onPaintingClick)
         }
     }
 }
 
 @Composable
-fun ItemDetail(item: Item, onItemClick: OnItemFn) {
-//    Log.d("ItemDetail", "recompose id = ${item.id}")
+fun PaintingDetail(painting: Painting, onPaintingClick: OnPaintingFn) {
+//    Log.d("PaintingDetail", "recompose id = ${painting.id}")
     Row {
 
-        ClickableText(text = AnnotatedString(item.value.toString()),
+        ClickableText(text = AnnotatedString(painting.value.toString()),
             style = TextStyle(
                 fontSize = 24.sp,
-            ), onClick = { onItemClick(item._id) }
+            ), onClick = { onPaintingClick(painting._id) }
         )
         Text(text = "  ")
-        ClickableText(text = AnnotatedString(item.title),
+        ClickableText(text = AnnotatedString(painting.title),
             style = TextStyle(
                 fontSize = 24.sp,
-            ), onClick = { onItemClick(item._id) }
+            ), onClick = { onPaintingClick(painting._id) }
         )
         Text(text = "  ")
-        ClickableText(text = AnnotatedString(item.forSale.toString()),
+        ClickableText(text = AnnotatedString(painting.forSale.toString()),
             style = TextStyle(
                 fontSize = 24.sp,
-            ), onClick = { onItemClick(item._id) }
+            ), onClick = { onPaintingClick(painting._id) }
         )
     }
 }

@@ -1,4 +1,4 @@
-package com.example.myapp.todo.ui
+package com.example.myapp.painting_manager.ui
 
 import android.util.Log
 import androidx.compose.foundation.layout.Column
@@ -35,7 +35,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myapp.R
 import com.example.myapp.core.Result
-import com.example.myapp.todo.ui.item.ItemViewModel
+import com.example.myapp.painting_manager.ui.painting.PaintingViewModel
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -45,34 +45,34 @@ import java.time.format.DateTimeFormatter
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun ItemScreen(itemId: String?, onClose: () -> Unit) {
-    val itemViewModel = viewModel<ItemViewModel>(factory = ItemViewModel.Factory(itemId))
-    val itemUiState = itemViewModel.uiState
+fun PaintingScreen(paintingId: String?, onClose: () -> Unit) {
+    val paintingViewModel = viewModel<PaintingViewModel>(factory = PaintingViewModel.Factory(paintingId))
+    val paintingUiState = paintingViewModel.uiState
 
-    var title by rememberSaveable { mutableStateOf(itemUiState.item.title) }
-    var value by rememberSaveable { mutableIntStateOf(itemUiState.item.value) }
-    var forSale by rememberSaveable { mutableStateOf(itemUiState.item.forSale) }
-    var date by rememberSaveable { mutableStateOf(itemUiState.item.date) }
+    var title by rememberSaveable { mutableStateOf(paintingUiState.painting.title) }
+    var value by rememberSaveable { mutableIntStateOf(paintingUiState.painting.value) }
+    var forSale by rememberSaveable { mutableStateOf(paintingUiState.painting.forSale) }
+    var date by rememberSaveable { mutableStateOf(paintingUiState.painting.date) }
 
 
-    Log.d("ItemScreen", "recompose, text = $title")
+    Log.d("PaintingScreen", "recompose, text = $title")
 
-    LaunchedEffect(itemUiState.submitResult) {
-        Log.d("ItemScreen", "Submit = ${itemUiState.submitResult}");
-        if (itemUiState.submitResult is Result.Success) {
-            Log.d("ItemScreen", "Closing screen");
+    LaunchedEffect(paintingUiState.submitResult) {
+        Log.d("PaintingScreen", "Submit = ${paintingUiState.submitResult}");
+        if (paintingUiState.submitResult is Result.Success) {
+            Log.d("PaintingScreen", "Closing screen");
             onClose();
         }
     }
 
-    var textInitialized by remember { mutableStateOf(itemId == null) }
-    LaunchedEffect(itemId, itemUiState.loadResult) {
-        Log.d("ItemScreen", "Text initialized = ${itemUiState.loadResult}");
+    var textInitialized by remember { mutableStateOf(paintingId == null) }
+    LaunchedEffect(paintingId, paintingUiState.loadResult) {
+        Log.d("PaintingScreen", "Text initialized = ${paintingUiState.loadResult}");
         if (textInitialized) {
             return@LaunchedEffect
         }
-        if (!(itemUiState.loadResult is Result.Loading)) {
-            title = itemUiState.item.title
+        if (!(paintingUiState.loadResult is Result.Loading)) {
+            title = paintingUiState.painting.title
             textInitialized = true
         }
     }
@@ -80,11 +80,11 @@ fun ItemScreen(itemId: String?, onClose: () -> Unit) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = stringResource(id = R.string.item)) },
+                title = { Text(text = stringResource(id = R.string.painting)) },
                 actions = {
                     Button(onClick = {
-                        Log.d("ItemScreen", "save item text = $title");
-                        itemViewModel.saveOrUpdateItem(title, value, forSale, date)
+                        Log.d("PaintingScreen", "save painting text = $title");
+                        paintingViewModel.saveOrUpdatePainting(title, value, forSale, date)
                     }) { Text("Save") }
                 }
             )
@@ -95,18 +95,18 @@ fun ItemScreen(itemId: String?, onClose: () -> Unit) {
                 .padding(it)
                 .fillMaxSize()
         ) {
-            if (itemUiState.loadResult is Result.Loading) {
+            if (paintingUiState.loadResult is Result.Loading) {
                 CircularProgressIndicator()
                 return@Scaffold
             }
-            if (itemUiState.submitResult is Result.Loading) {
+            if (paintingUiState.submitResult is Result.Loading) {
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
                 ) { LinearProgressIndicator() }
             }
-            if (itemUiState.loadResult is Result.Error) {
-                Text(text = "Failed to load item - ${(itemUiState.loadResult as Result.Error).exception?.message}")
+            if (paintingUiState.loadResult is Result.Error) {
+                Text(text = "Failed to load painting - ${(paintingUiState.loadResult as Result.Error).exception?.message}")
             }
             Row {
                 TextField(
@@ -173,9 +173,9 @@ fun ItemScreen(itemId: String?, onClose: () -> Unit) {
                     date = selectedDate.format(DateTimeFormatter.ISO_LOCAL_DATE)
                 }
             }
-            if (itemUiState.submitResult is Result.Error) {
+            if (paintingUiState.submitResult is Result.Error) {
                 Text(
-                    text = "Failed to submit item - ${(itemUiState.submitResult as Result.Error).exception?.message}",
+                    text = "Failed to submit painting - ${(paintingUiState.submitResult as Result.Error).exception?.message}",
                     modifier = Modifier.fillMaxWidth(),
                 )
             }
@@ -186,6 +186,6 @@ fun ItemScreen(itemId: String?, onClose: () -> Unit) {
 
 @Preview
 @Composable
-fun PreviewItemScreen() {
-    ItemScreen(itemId = "0", onClose = {})
+fun PreviewPaintingScreen() {
+    PaintingScreen(paintingId = "0", onClose = {})
 }

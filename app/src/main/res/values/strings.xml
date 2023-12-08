@@ -1,6 +1,6 @@
 <resources>
-    <string name="app_name">My App</string>
-    <string name="item">Item</string>
-    <string name="items">Items</string>
+    <string name="app_name">Painting Manager</string>
+    <string name="painting">Painting</string>
+    <string name="paintings">Paintings</string>
     <string name="login">Login</string>
 </resources>

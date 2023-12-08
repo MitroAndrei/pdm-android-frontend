@@ -9,12 +9,12 @@ import androidx.lifecycle.viewmodel.viewModelFactory
 import com.example.myapp.core.TAG
 import com.example.myapp.core.data.UserPreferences
 import com.example.myapp.core.data.UserPreferencesRepository
-import com.example.myapp.todo.data.ItemRepository
+import com.example.myapp.painting_manager.data.PaintingRepository
 import kotlinx.coroutines.launch
 
 class MyAppViewModel(
     private val userPreferencesRepository: UserPreferencesRepository,
-    private val itemRepository: ItemRepository
+    private val paintingRepository: PaintingRepository
 ) :
     ViewModel() {
 
@@ -24,13 +24,13 @@ class MyAppViewModel(
 
     fun logout() {
         viewModelScope.launch {
-            //itemRepository.deleteAll()
+            //paintingRepository.deleteAll()
             userPreferencesRepository.save(UserPreferences())
         }
     }
 
     fun setToken(token: String) {
-        itemRepository.setToken(token)
+        paintingRepository.setToken(token)
     }
 
     companion object {
@@ -40,7 +40,7 @@ class MyAppViewModel(
                     (this[ViewModelProvider.AndroidViewModelFactory.APPLICATION_KEY] as MyApplication)
                 MyAppViewModel(
                     app.container.userPreferencesRepository,
-                    app.container.itemRepository
+                    app.container.paintingRepository
                 )
             }
         }
